@@ -4,10 +4,10 @@
       <input type="text" class="todo-input" placeholder="Item name" v-model="newTodo" @keyup.enter="addTodo">
       <button type="button" v-on:click="addTodo">Add task</button> 
     </div>
-    <div v-for="(todo,index) in todos" :key="todo.id" class="toDoItem">
-      <div class="toDo">
-        <div>{{todo.title}}</div>
-        <input type="text" v-model="todo.title">
+    <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item">
+      <div class="todo-item-left">
+        <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label">{{todo.title}}</div>
+        <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
       </div>
       <div class="remove-item" @click="removeToDo(index)">
         &times;
@@ -23,18 +23,29 @@ export default {
     return {
       newTodo: '',
       idToDo: 3,
+      tempTitle: '',
       todos:[
         {
           'id': 1,
           'title': 'Buy bread',
           'completed': false,
+          'editing': false,
         },
         {
           'id': 2,
           'title': 'Be responsible',
           'completed': false,
+          'editing': false,
         }
       ]
+    }
+  },
+  directives: {
+    focus: {
+      // directive definition
+      inserted: function (el) {
+        el.focus()
+      }
     }
   },
   methods: {
@@ -47,13 +58,28 @@ export default {
         id: this.idToDo,
         title: this.newTodo,
         completed: false,
+        editing: false,
       })
 
       this.newTodo = ''
       this.this.idToDo++
     },
+    editTodo(todo){
+      this.tempTitle = todo.title
+      todo.editing = true
+    },
     removeToDo(index){
       this.todos.splice(index, 1)
+    },
+    cancelEdit(todo){
+      todo.title = this.tempTitle
+      todo.editing = false
+    },
+    doneEdit(todo){
+      if(todo.title.trim()==0){
+        todo.title = this.tempTitle
+      }
+      todo.editing = false
     }
   }
 }
@@ -61,12 +87,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .todo-input { 
   width: 80%; 
   padding: 10px;
 }
 
-.toDoItem {
+.todo-item {
   margin: 5px 0;
   display: flex;
   justify-content: space-between;
@@ -75,6 +102,7 @@ export default {
 
 .remove-item {
   cursor: pointer;
+  align-self: center;
 }
 
 button {
@@ -84,19 +112,18 @@ button {
    margin-left: 15px;
 }
 
+.todo-item-left {
+  display:flex;
+  align-items: center;
+}
 
-h3 {
-  margin: 40px 0 0;
+.todo-item-label, .todo-item-edit { 
+  margin-left: 5px;
+  padding: 10px;
+  font-size:18px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
+
+
+
 </style>
