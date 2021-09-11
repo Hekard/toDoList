@@ -2,7 +2,7 @@
   <div>
     <div class="container">
       <input type="text" class="todo-input" placeholder="Task name" v-model="newTodo" @keyup.enter="addTodo">
-      <button type="button" v-on:click="addTodo">Add task</button> 
+      <button type="button" @click="addTodo">Add task</button> 
     </div>
     <input type="text" class="filter" v-model="search" placeholder="Filter">
     <div v-for="(todo,index) in filteredItems" :key="todo.id" class="todo-item" :class="{ completed : todo.completed }">
@@ -18,7 +18,7 @@
         <div class="remove-item" @click="removeToDo(index)">
           &times;
         </div>
-      </div>
+      </div>  
     </div>
   </div>
 </template>
