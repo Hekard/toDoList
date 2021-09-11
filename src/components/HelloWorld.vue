@@ -1,10 +1,11 @@
 <template>
   <div>
     <div class="container">
-      <input type="text" class="todo-input" placeholder="Item name" v-model="newTodo" @keyup.enter="addTodo">
+      <input type="text" class="todo-input" placeholder="Task name" v-model="newTodo" @keyup.enter="addTodo">
       <button type="button" v-on:click="addTodo">Add task</button> 
     </div>
-    <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item" :class="{ completed : todo.completed }">
+    <input type="text" class="filter" v-model="search" placeholder="Filter">
+    <div v-for="(todo,index) in filteredItems" :key="todo.id" class="todo-item" :class="{ completed : todo.completed }">
       <div class="todo-item-left">
         <input type="checkbox" v-model="todo.completed">
         <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label">{{todo.title}}</div>
@@ -28,18 +29,25 @@ export default {
   data () {
     return {
       newTodo: '',
-      idToDo: 3,
+      idToDo: 4,
       tempTitle: '',
+      search: '',
       todos:[
         {
           'id': 1,
           'title': 'Buy bread',
-          'completed': false,
+          'completed': true,
           'editing': false,
         },
         {
           'id': 2,
           'title': 'Be responsible',
+          'completed': false,
+          'editing': false,
+        },
+        {
+          'id': 3,
+          'title': "Try not to destroy your window's motor",
           'completed': false,
           'editing': false,
         }
@@ -51,6 +59,16 @@ export default {
       // directive definition
       inserted: function (el) {
         el.focus()
+      }
+    }
+  },
+  computed: {
+    filteredItems() {
+      if(this.search ==''){
+        return this.todos
+      }
+      else{
+        return this.todos.filter(todo => todo.title.toLowerCase().includes(this.search.toLowerCase()))
       }
     }
   },
@@ -94,9 +112,19 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+.container {
+  margin-bottom: 10px;
+}
+
 .todo-input { 
   width: 80%; 
   padding: 10px;
+}
+
+.filter { 
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px; 
 }
 
 .todo-item {
@@ -104,12 +132,14 @@ export default {
   justify-content: space-between;
   padding: 2px 5px;
   border-bottom: 1px solid #e2e2e2;
+  /* border-radius: 10px; */
+  transition: 0.8s;
 }
 
 .remove-item, .edit-item {
   cursor: pointer;
   align-self: center;
-  margin-left: 15px;
+  margin: 0 10px;
   font-size: 25px;
 }
 
