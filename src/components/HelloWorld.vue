@@ -4,8 +4,9 @@
       <input type="text" class="todo-input" placeholder="Item name" v-model="newTodo" @keyup.enter="addTodo">
       <button type="button" v-on:click="addTodo">Add task</button> 
     </div>
-    <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item">
+    <div v-for="(todo,index) in todos" :key="todo.id" class="todo-item" :class="{ completed : todo.completed }">
       <div class="todo-item-left">
+        <input type="checkbox" v-model="todo.completed">
         <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label">{{todo.title}}</div>
         <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
       </div>
@@ -99,10 +100,10 @@ export default {
 }
 
 .todo-item {
-  margin: 5px 0;
   display: flex;
   justify-content: space-between;
-  padding: 0px 5px;
+  padding: 2px 5px;
+  border-bottom: 1px solid #e2e2e2;
 }
 
 .remove-item, .edit-item {
@@ -117,6 +118,11 @@ button {
    padding: 10px;
    color: white;
    margin-left: 15px;
+   transition: 0.5s;
+}
+
+button:hover {
+  background: #015f01;
 }
 
 .todo-item-left {
@@ -128,6 +134,7 @@ button {
   margin-left: 5px;
   padding: 10px;
   font-size:18px;
+  text-decoration: line-through rgba(255,255,255,0);
 }
 
 .interactive-elements { 
@@ -135,6 +142,15 @@ button {
   flex-direction: row;
 }
 
+.completed { 
+  background: #c7c7c7;
+  transition: 0.8s;
+}
+
+.completed .todo-item-label {
+  transition: 0.8s;
+  text-decoration: line-through #2c3e50;
+}
 
 
 </style>
