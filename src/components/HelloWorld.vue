@@ -9,8 +9,13 @@
         <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label">{{todo.title}}</div>
         <input v-else class="todo-item-edit" type="text" v-model="todo.title" @blur="doneEdit(todo)" @keyup.enter="doneEdit(todo)" @keyup.esc="cancelEdit(todo)" v-focus>
       </div>
-      <div class="remove-item" @click="removeToDo(index)">
-        &times;
+      <div class="interactive-elements">
+        <div class="edit-item" @click="editTodo(todo)">
+          &#x270E;
+        </div>
+        <div class="remove-item" @click="removeToDo(index)">
+          &times;
+        </div>
       </div>
     </div>
   </div>
@@ -100,9 +105,11 @@ export default {
   padding: 0px 5px;
 }
 
-.remove-item {
+.remove-item, .edit-item {
   cursor: pointer;
   align-self: center;
+  margin-left: 15px;
+  font-size: 25px;
 }
 
 button {
@@ -123,6 +130,10 @@ button {
   font-size:18px;
 }
 
+.interactive-elements { 
+  display:flex;
+  flex-direction: row;
+}
 
 
 
